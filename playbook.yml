@@ -1,0 +1,54 @@
+- hosts: linux
+  become: yes
+  tasks:
+    - name: Install common packages
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - wget
+          - htop
+          - git
+          - net-tools
+
+- hosts: linux
+  become: yes
+  tasks:
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_installed
+      ignore_errors: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      when: docker_installed is failed
+
+    - name: Notify if Docker is already installed
+      debug:
+        msg: "Docker is already installed."
+      when: docker_installed is succeeded
+
+    # - name: Set up WordPress
+    #   # Add tasks to set up WordPress with Docker
+    #   when: docker_installed is failed
+
+- hosts: linux
+  become: yes
+  tasks:
+    - name: Check if MySQL is installed
+      command: mysql --version
+      register: mysql_installed
+      ignore_errors: yes
+
+    - name: Install MySQL
+      apt:
+        name: mysql-server
+        state: present
+      when: mysql_installed is failed
+
+    - name: Notify if MySQL is already installed
+      debug:
+        msg: "MySQL is already installed."
+      when: mysql_installed is succeeded

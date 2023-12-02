@@ -1,3 +1,9 @@
+# Install Docker and MySQL on Ubuntu Virtual Machine using Ansible Playbook
+```
+$ ansible-playbook --ask-pass -i inventory playbook.yml 
+```
+
+
 # terraform version
 
 ```
